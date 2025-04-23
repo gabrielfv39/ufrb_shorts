@@ -1,0 +1,61 @@
+<%= form_with(model: video) do |form| %>
+  <% if video.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(video.errors.count, "error") %> prohibited this video from being saved:</h4>
+      <ul>
+        <% video.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, rows: 4, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :youtube_url, "YouTube URL", class: "form-label" %>
+    <%= form.text_field :youtube_url, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :category, class: "form-label" %>
+    <%= form.select :category, 
+      ["Short Film", "Animation", "Documentary", "TV Pilot", "Experimental", "Other"],
+      { include_blank: "Select a category" }, 
+      { class: "form-select" } %>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :duration, "Duration (minutes)", class: "form-label" %>
+      <%= form.number_field :duration, class: "form-control" %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :release_date, class: "form-label" %>
+      <%= form.date_field :release_date, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :cast, "Cast (separate names with commas)", class: "form-label" %>
+    <%= form.text_field :cast, class: "form-control", placeholder: "Ex: John Doe, Jane Smith, etc." %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :crew, "Crew (separate roles with commas)", class: "form-label" %>
+    <%= form.text_field :crew, class: "form-control", placeholder: "Ex: Director: John Doe, Camera: Jane Smith, etc." %>
+  </div>
+
+  <div class="d-grid gap-2">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

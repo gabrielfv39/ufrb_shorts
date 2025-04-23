@@ -1,0 +1,78 @@
+<div class="video-page">
+  <div class="video-player">
+    <%= embed_youtube_video(@video.youtube_url) %>
+  </div>
+  
+  <div class="video-details">
+    <h1><%= @video.title %></h1>
+    <p class="category-badge"><%= @video.category.capitalize %></p>
+    <p class="duration"><%= @video.duration %></p>
+    
+    <div class="synopsis">
+      <h3>Synopsis</h3>
+      <p><%= @video.synopsis %></p>
+    </div>
+
+  <% if @video.cast.present? %>
+  <div class="mb-3">
+    <strong>Cast:</strong>
+    <ul class="list-unstyled">
+      <% @video.cast.split(',').each do |member| %>
+        <li><%= member.strip %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if @video.crew.present? %>
+  <div class="mb-3">
+    <strong>Crew:</strong>
+    <ul class="list-unstyled">
+      <% @video.crew.split(',').each do |member| %>
+        <li><%= member.strip %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+  
+  <% if user_signed_in? && current_user == @video.user %>
+    <div class="video-actions">
+      <%= link_to "Edit", edit_video_path(@video), class: "btn" %>
+      <%= button_to "Delete", video_path(@video), method: :delete, data: { confirm: "Are you sure you want to delete this video?" }, class: "btn btn-danger" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="mt-5">
+  <h3>Comments</h3>
+  
+  <% if user_signed_in? %>
+    <div class="mb-4">
+      <%= form_with(model: [@video, Comment.new], local: true) do |form| %>
+        <div class="mb-3">
+          <%= form.label :content, "Your Comment", class: "form-label" %>
+          <%= form.text_area :content, rows: 3, class: "form-control" %>
+        </div>
+        
+        <%= form.submit "Post Comment", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <div class="comments-list">
+    <% if @video.comments.any? %>
+      <% @video.comments.order(created_at: :desc).each do |comment| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted">
+            <%= comment.user.username %> • <%= time_ago_in_words(comment.created_at) %> ago
+            </h6>
+            <p class="card-text"><%= comment.content %></p>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-muted">No comments yet.</p>
+    <% end %>
+  </div>
+</div>

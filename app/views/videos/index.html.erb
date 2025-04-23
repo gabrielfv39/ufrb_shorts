@@ -1,0 +1,48 @@
+<h1 class="mb-4">All Videos</h1>
+
+<div class="container">
+  <% if user_signed_in? %>
+    <div class="text-end mb-4">
+      <%= link_to "New Video", new_video_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+  
+  <div class="videos-grid">
+    <!-- ... existing code ... -->
+  </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  <% @videos.each do |video| %>
+    <div class="col">
+      <div class="card h-100 video-card">
+        <% if video.youtube_url.present? %>
+          <img src="<%= video.youtube_thumbnail %>" class="card-img-top" alt="<%= video.title %>">
+        <% else %>
+          <div class="card-img-top bg-light d-flex justify-content-center align-items-center" style="height: 180px;">
+            <span>No preview available</span>
+          </div>
+        <% end %>
+        <div class="card-body">
+          <h5 class="card-title"><%= video.title %></h5>
+          <p class="card-text"><%= truncate(video.synopsis, length: 100) %></p>
+          
+          <% if video.category.present? %>
+            <span class="badge bg-primary"><%= video.category %></span>
+          <% end %>
+          
+          <% if video.duration.present? %>
+            <span class="badge bg-secondary"><%= video.duration %> min</span>
+          <% end %>
+        </div>
+        <div class="card-footer">
+          <%= link_to "View", video, class: "btn btn-sm btn-outline-primary" %>
+          <% if user_signed_in? %>
+            <%= link_to "Edit", edit_video_path(video), class: "btn btn-sm btn-outline-secondary" %>
+            <%= button_to "Delete", video_path(video), method: :delete, class: "btn btn-sm btn-outline-danger", form: { style: 'display:inline-block;', data: { turbo_confirm: 'Are you sure?' } } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
